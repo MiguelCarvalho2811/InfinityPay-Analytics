@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InfinitePay Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+        </svg>
+      </div>
+      <h1>InfinitePay Analytics</h1>
+    </header>
+
+    <main>
+      <div id="status-message" class="status"></div>
+
+      <button id="btn-analyze" class="btn btn-primary" style="margin-bottom:8px">
+        Analisar Vendas
+      </button>
+
+      <div class="btn-group">
+        <button id="btn-config" class="btn btn-secondary">
+          Configurações
+        </button>
+        <button id="btn-dashboard" class="btn btn-secondary">
+          Dashboard
+        </button>
+      </div>
+
+      <div id="result-area" class="result-area hidden">
+        <h2>Resumo da Análise</h2>
+        <div id="summary-cards" class="summary-cards"></div>
+      </div>
+    </main>
+
+    <footer>
+      <span class="version">v1.0.0</span>
+      <span id="config-status" class="config-status"></span>
+    </footer>
+  </div>
+
+  <script src="analyzer/pix-analyzer.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

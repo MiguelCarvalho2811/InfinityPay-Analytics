@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "InfinitePay Analytics",
+  "version": "1.0.0",
+  "description": "Análise automática de vendas InfinitePay para operações WhatsApp X1",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+
+  "host_permissions": [
+    "https://app.infinitepay.io/*",
+    "https://cloudwalk-statement-api.services.production.infinitepay.io/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "InfinitePay Analytics",
+    "default_icon": "pay_logo.png"
+  },
+  "icons": {
+    "128": "pay_logo.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://app.infinitepay.io/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["dashboard.html", "config.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
