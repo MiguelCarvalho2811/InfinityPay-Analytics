@@ -88,11 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
       await saveAnalysis(summary);
 
       displaySummary(summary, classified);
-      const naoId = classified.filter(tx => tx.tipo === 'desconhecido');
-      showStatus(
-        `Análise concluída: ${summary.totalVendas} venda(s), ${naoId.length} não identificada(s).`,
-        'success'
-      );
+      const nid = classified.filter(tx => tx.tipo === 'incompativel').length;
+      const desc = classified.filter(tx => tx.tipo === 'desconhecido').length;
+      const parts = [`${summary.totalVendas} venda(s)`];
+      if (nid) parts.push(`${nid} sem ticket`);
+      if (desc) parts.push(`${desc} sem produto`);
+      showStatus(`Análise concluída: ${parts.join(', ')}.`, 'success');
     } catch (err) {
       showStatus('Erro ao analisar: ' + err.message, 'error');
     } finally {
@@ -133,16 +134,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function generateSummary(classified) {
     const produtosMap = {};
-    let totalVendas = 0, totalReceita = 0, totalUpsells = 0, totalNaoId = 0;
+    let totalVendas = 0, totalReceita = 0, totalUpsells = 0, totalNaoId = 0, totalDesconhecido = 0;
 
     classified.forEach(tx => {
       totalVendas++;
       totalReceita += tx.valor;
-      if (tx.tipo === 'desconhecido') { totalNaoId++; return; }
-      const p = produtosMap[tx.produto] || (produtosMap[tx.produto] = { receita: 0, vendas: 0, upsells: 0 });
+      if (tx.tipo === 'desconhecido') { totalDesconhecido++; return; }
+      const p = produtosMap[tx.produto] || (produtosMap[tx.produto] = { receita: 0, vendas: 0, upsells: 0, naoId: 0 });
       p.vendas++;
       p.receita += tx.valor;
       if (tx.tipo === 'upsell') { totalUpsells++; p.upsells++; }
+      if (tx.tipo === 'incompativel') { totalNaoId++; p.naoId++; }
     });
 
     const produtos = Object.entries(produtosMap).map(([nome, data]) => ({
@@ -157,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ticketMedio: totalVendas > 0 ? Math.round((totalReceita / totalVendas) * 100) / 100 : 0,
       totalUpsells,
       totalNaoId,
+      totalDesconhecido,
       produtos,
       transactions: classified
     };
@@ -177,13 +180,17 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="summary-card"><div class="value">${summary.totalVendas}</div><div class="label">Vendas</div></div>
       <div class="summary-card"><div class="value">R$ ${summary.ticketMedio.toFixed(2)}</div><div class="label">Ticket Médio</div></div>
       <div class="summary-card"><div class="value">${summary.totalUpsells}</div><div class="label">Upsells</div></div>
+      <div class="summary-card"><div class="value">${summary.totalNaoId}</div><div class="label">Não Identificadas</div></div>
     `;
     if (summary.produtos?.length) {
       html += '<div style="grid-column:1/-1;margin-top:8px"><div style="font-size:11px;color:#A0A0A0;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px">Por Produto</div>';
       summary.produtos.forEach(p => {
+        const chips = [`${p.vendas} vendas`, `R$ ${p.receita.toFixed(2)}`];
+        if (p.upsells) chips.push(`${p.upsells} upsells`);
+        if (p.naoId) chips.push(`${p.naoId} não id.`);
         html += `<div style="display:flex;justify-content:space-between;padding:6px 8px;background:#0B0B0B;border-radius:6px;margin-bottom:4px;font-size:12px">
           <span style="color:#F4F4F4">${p.nome}</span>
-          <span style="color:#C8FF1A;font-weight:600">${p.vendas} vendas · R$ ${p.receita.toFixed(2)}</span>
+          <span style="color:#C8FF1A;font-weight:600">${chips.join(' · ')}</span>
         </div>`;
       });
       html += '</div>';

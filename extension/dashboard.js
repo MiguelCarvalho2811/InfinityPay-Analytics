@@ -25,17 +25,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const produtos = latest.produtos || [];
     const classified = latest.transactions || [];
 
-    updateCards(latest);
+    const totalNaoId = latest.totalNaoId ?? classified.filter(tx => tx.tipo === 'incompativel').length;
+
+    updateCards(latest, totalNaoId);
     updateProdutos(produtos);
     updateRanking(produtos);
     updateDetalhamento(produtos, classified);
   }
 
-  function updateCards(summary) {
+  function updateCards(summary, totalNaoId) {
     document.getElementById('card-receita').textContent = `R$ ${summary.totalReceita.toFixed(2)}`;
     document.getElementById('card-vendas').textContent = summary.totalVendas;
     document.getElementById('card-ticket').textContent = `R$ ${summary.ticketMedio.toFixed(2)}`;
     document.getElementById('card-upsells').textContent = summary.totalUpsells;
+    document.getElementById('card-nao-id').textContent = totalNaoId;
   }
 
   function updateProdutos(produtos) {
@@ -66,6 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="metric-value">${p.upsells}</span>
             <span class="metric-label">Upsells</span>
           </div>
+          <div class="metric">
+            <span class="metric-value">${p.naoId || 0}</span>
+            <span class="metric-label">Não Identificadas</span>
+          </div>
         </div>
       </div>
     `).join('');
@@ -75,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = document.getElementById('ranking-body');
 
     if (!produtos || produtos.length === 0) {
-      body.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum dado disponível.</td></tr>';
+      body.innerHTML = '<tr><td colspan="6" class="empty-state">Nenhum dado disponível.</td></tr>';
       return;
     }
 
@@ -85,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td class="td-valor">R$ ${p.receita.toFixed(2)}</td>
         <td>${p.vendas}</td>
         <td>${p.upsells}</td>
+        <td>${p.naoId || 0}</td>
         <td>R$ ${p.ticketMedio.toFixed(2)}</td>
       </tr>
     `).join('');
@@ -127,9 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           ${incompativel.length > 0 ? `
           <div class="detalhe-block">
-            <div class="detalhe-subtitle">Vendas não identificadas</div>
+            <div class="detalhe-subtitle">Vendas Não Identificadas</div>
             <div class="detalhe-values">${incompativelStr}</div>
-            <div class="detalhe-soma">Soma: <strong>R$ ${somaIncompativeis.toFixed(2)}</strong></div>
+            <div class="detalhe-soma">Soma das Não Identificadas: <strong>R$ ${somaIncompativeis.toFixed(2)}</strong></div>
           </div>` : ''}
         </div>
       `;
@@ -141,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function showEmptyState() {
     document.querySelectorAll('.card-value').forEach(el => el.textContent = '-');
     document.getElementById('produtos-list').innerHTML = '<p class="empty-state">Nenhuma análise encontrada. Use "Analisar Vendas" no popup.</p>';
-    document.getElementById('ranking-body').innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum dado disponível.</td></tr>';
+    document.getElementById('ranking-body').innerHTML = '<tr><td colspan="6" class="empty-state">Nenhum dado disponível.</td></tr>';
     document.getElementById('detalhamento-list').innerHTML = '<p class="empty-state">Nenhum dado disponível.</p>';
   }
 
