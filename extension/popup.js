@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const product = tx.pixEnding ? pixProductMap[tx.pixEnding] : null;
 
       if (!product) {
-        return { ...tx, produto: 'Sem Produto', tipo: 'desconhecido' };
+        return { ...tx, produto: 'Não identificado', tipo: 'desconhecido' };
       }
 
       const candidates = [
@@ -139,13 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     classified.forEach(tx => {
       totalVendas++;
       totalReceita += tx.valor;
-      if (tx.tipo === 'desconhecido') {
-        totalDesconhecido++;
-        const p = produtosMap['Sem Produto'] || (produtosMap['Sem Produto'] = { receita: 0, vendas: 0, upsells: 0, naoId: 0, semProduto: true });
-        p.vendas++;
-        p.receita += tx.valor;
-        return;
-      }
+      if (tx.tipo === 'desconhecido') { totalDesconhecido++; return; }
       const p = produtosMap[tx.produto] || (produtosMap[tx.produto] = { receita: 0, vendas: 0, upsells: 0, naoId: 0 });
       p.vendas++;
       p.receita += tx.valor;
@@ -155,11 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const produtos = Object.entries(produtosMap).map(([nome, data]) => ({
       nome, ...data, ticketMedio: data.vendas > 0 ? data.receita / data.vendas : 0
-    })).sort((a, b) => {
-      if (a.semProduto) return 1;
-      if (b.semProduto) return -1;
-      return b.receita - a.receita;
-    });
+    })).sort((a, b) => b.receita - a.receita);
 
     return {
       data: new Date().toISOString().split('T')[0],
@@ -191,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="summary-card"><div class="value">R$ ${summary.ticketMedio.toFixed(2)}</div><div class="label">Ticket Médio</div></div>
       <div class="summary-card"><div class="value">${summary.totalUpsells}</div><div class="label">Upsells</div></div>
       <div class="summary-card"><div class="value">${summary.totalNaoId}</div><div class="label">Não Identificadas</div></div>
-      <div class="summary-card"><div class="value">${summary.totalDesconhecido}</div><div class="label">Sem Produto</div></div>
     `;
     if (summary.produtos?.length) {
       html += '<div style="grid-column:1/-1;margin-top:8px"><div style="font-size:11px;color:#A0A0A0;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px">Por Produto</div>';

@@ -26,21 +26,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const classified = latest.transactions || [];
 
     const totalNaoId = latest.totalNaoId ?? classified.filter(tx => tx.tipo === 'incompativel').length;
-    const totalSemProduto = latest.totalDesconhecido ?? classified.filter(tx => tx.tipo === 'desconhecido').length;
 
-    updateCards(latest, totalNaoId, totalSemProduto);
+    updateCards(latest, totalNaoId);
     updateProdutos(produtos);
     updateRanking(produtos);
     updateDetalhamento(produtos, classified);
   }
 
-  function updateCards(summary, totalNaoId, totalSemProduto) {
+  function updateCards(summary, totalNaoId) {
     document.getElementById('card-receita').textContent = `R$ ${summary.totalReceita.toFixed(2)}`;
     document.getElementById('card-vendas').textContent = summary.totalVendas;
     document.getElementById('card-ticket').textContent = `R$ ${summary.ticketMedio.toFixed(2)}`;
     document.getElementById('card-upsells').textContent = summary.totalUpsells;
     document.getElementById('card-nao-id').textContent = totalNaoId;
-    document.getElementById('card-sem-produto').textContent = totalSemProduto;
   }
 
   function updateProdutos(produtos) {
@@ -52,8 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     list.innerHTML = produtos.map(p => `
-      <div class="product-card${p.semProduto ? ' product-card-dim' : ''}">
-        <div class="product-name${p.semProduto ? ' product-name-dim' : ''}">${p.nome}</div>
+      <div class="product-card">
+        <div class="product-name">${p.nome}</div>
         <div class="product-metrics">
           <div class="metric">
             <span class="metric-value">R$ ${p.receita.toFixed(2)}</span>
@@ -89,8 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     body.innerHTML = produtos.map(p => `
-      <tr class="${p.semProduto ? 'tr-dim' : ''}">
-        <td class="td-produto${p.semProduto ? ' td-produto-dim' : ''}">${p.nome}</td>
+      <tr>
+        <td class="td-produto">${p.nome}</td>
         <td class="td-valor">R$ ${p.receita.toFixed(2)}</td>
         <td>${p.vendas}</td>
         <td>${p.upsells}</td>
@@ -123,8 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const somaIncompativeis = incompativel.reduce((acc, tx) => acc + tx.valor, 0);
 
       return `
-        <div class="detalhe-card${p.semProduto ? ' detalhe-card-dim' : ''}">
-          <div class="detalhe-header${p.semProduto ? ' detalhe-header-dim' : ''}">${p.nome}</div>
+        <div class="detalhe-card">
+          <div class="detalhe-header">${p.nome}</div>
           <div class="detalhe-block">
             <div class="detalhe-subtitle">Vendas Principais</div>
             <div class="detalhe-values">${principaisStr || '—'}</div>
