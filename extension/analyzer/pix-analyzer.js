@@ -29,18 +29,20 @@ async function analyzeTransactions(maxCount) {
     }
   }
 
-  let h3Els = [...document.querySelectorAll("h3")].filter(el =>
-    el.innerText.toLowerCase().includes("pix")
-  );
+  let h3Els = [...document.querySelectorAll("h3")].filter(el => {
+    const t = el.innerText.toLowerCase();
+    return t.includes("pix") && !t.includes("qr code");
+  });
 
   // Second scroll pass to catch any remaining lazy-loaded items
   for (const target of scrollCandidates) {
     target.scrollTop = target.scrollHeight;
     await sleep(500);
   }
-  h3Els = [...document.querySelectorAll("h3")].filter(el =>
-    el.innerText.toLowerCase().includes("pix")
-  );
+  h3Els = [...document.querySelectorAll("h3")].filter(el => {
+    const t = el.innerText.toLowerCase();
+    return t.includes("pix") && !t.includes("qr code");
+  });
 
   for (let i = 0; i < Math.min(h3Els.length, limit); i++) {
     const el = h3Els[i];
