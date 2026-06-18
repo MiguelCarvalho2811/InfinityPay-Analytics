@@ -44,13 +44,15 @@ async function analyzeTransactions(maxCount) {
     return t.includes("pix") && !t.includes("qr code");
   });
 
-  for (let i = 0; i < Math.min(h3Els.length, limit); i++) {
-    const el = h3Els[i];
-    try {
-      let pixEnding = '';
-      let valor = 0;
-      const oldUrl = location.href;
-      el.click();
+    for (let i = 0; i < Math.min(h3Els.length, limit); i++) {
+      const el = h3Els[i];
+      try {
+        let pixEnding = '';
+        let horario = '';
+        let dataHora = '';
+        let valor = 0;
+        const oldUrl = location.href;
+        el.click();
 
       let dlg = null;
       for (let attempt = 0; attempt < 2; attempt++) {
@@ -92,16 +94,15 @@ async function analyzeTransactions(maxCount) {
         const pm = text.match(/chave pix[\s\S]*?(\d{3,6})(?!\d)/i);
         pixEnding = pm ? pm[1] : '';
 
+        const timeM = text.match(/(?:•|\bat\b)\s*(\d{1,2}:\d{2})\b/);
+        const dateM = text.match(/(\d{1,2}\s+\w+[,.\s]+\d{4})/);
+        if (timeM) horario = timeM[1];
+        if (dateM) dataHora = `${dateM[1].replace(/[.,]\s*/, ' ') + ' ' + horario}`;
+
         await closeDialog();
       }
 
       if (valor > 0) {
-        const h3Text = el.innerText;
-        const timeM = h3Text.match(/(\d{1,2}:\d{2})\b/);
-        const dateM = h3Text.match(/(\d{1,2}\s+\w+,\s*\d{4})/);
-        const horario = timeM ? timeM[1] : '';
-        const dataStr = dateM ? dateM[1] : '';
-        const dataHora = dataStr ? `${dataStr} ${horario}` : horario;
         results.push({ valor, pixEnding, horario, dataHora });
       }
     } catch (e) {}
