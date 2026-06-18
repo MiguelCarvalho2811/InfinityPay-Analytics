@@ -6,7 +6,7 @@
   <title>Dashboard - InfinitePay Analytics</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
@@ -18,37 +18,55 @@
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
           </svg>
         </div>
-        <h1>Dashboard</h1>
+        <div>
+          <h1>Dashboard</h1>
+          <span class="header-sub">Métricas de vendas Pix</span>
+        </div>
       </div>
       <div class="header-actions">
-        <button id="btn-refresh" class="btn btn-secondary">Atualizar</button>
-        <button id="btn-export-csv" class="btn btn-secondary">CSV</button>
-        <button id="btn-export-json" class="btn btn-secondary">JSON</button>
+        <button id="btn-refresh" class="btn btn-secondary">
+          <svg class="btn-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Atualizar
+        </button>
+        <button id="btn-export-csv" class="btn btn-secondary">
+          <svg class="btn-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          CSV
+        </button>
+        <button id="btn-export-json" class="btn btn-secondary">
+          <svg class="btn-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          JSON
+        </button>
       </div>
     </header>
 
     <section id="summary-cards" class="cards-section">
       <div class="card">
-        <div class="card-value" id="card-receita">R$ 0,00</div>
+        <div class="card-icon card-icon-receita">R$</div>
+        <div class="card-value" id="card-receita">0,00</div>
         <div class="card-label">Receita Total</div>
       </div>
       <div class="card">
+        <div class="card-icon card-icon-vendas">#</div>
         <div class="card-value" id="card-vendas">0</div>
         <div class="card-label">Vendas</div>
       </div>
       <div class="card">
-        <div class="card-value" id="card-ticket">R$ 0,00</div>
+        <div class="card-icon card-icon-ticket">&empty;</div>
+        <div class="card-value" id="card-ticket">0,00</div>
         <div class="card-label">Ticket Médio</div>
       </div>
       <div class="card">
+        <div class="card-icon card-icon-upsells">U</div>
         <div class="card-value" id="card-upsells">0</div>
         <div class="card-label">Upsells</div>
       </div>
       <div class="card">
+        <div class="card-icon card-icon-nao-id">?</div>
         <div class="card-value" id="card-nao-id">0</div>
         <div class="card-label">Não Identificadas</div>
       </div>
       <div class="card">
+        <div class="card-icon card-icon-sem-produto">!</div>
         <div class="card-value" id="card-sem-produto">0</div>
         <div class="card-label">Sem Produto</div>
       </div>
@@ -84,7 +102,7 @@
     </section>
 
     <footer>
-      <a href="#" id="back-link">Voltar</a>
+      <a href="#" id="back-link">&larr; Voltar</a>
     </footer>
   </div>
 

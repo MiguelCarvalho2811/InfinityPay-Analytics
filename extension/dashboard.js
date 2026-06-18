@@ -35,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateCards(summary, totalNaoId, totalSemProduto) {
-    document.getElementById('card-receita').textContent = `R$ ${summary.totalReceita.toFixed(2)}`;
+    document.getElementById('card-receita').textContent = summary.totalReceita.toFixed(2);
     document.getElementById('card-vendas').textContent = summary.totalVendas;
-    document.getElementById('card-ticket').textContent = `R$ ${summary.ticketMedio.toFixed(2)}`;
+    document.getElementById('card-ticket').textContent = summary.ticketMedio.toFixed(2);
     document.getElementById('card-upsells').textContent = summary.totalUpsells;
     document.getElementById('card-nao-id').textContent = totalNaoId;
     document.getElementById('card-sem-produto').textContent = totalSemProduto;
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    let html = produtos.map(p => {
+    let html = produtos.map((p, idx) => {
       const txProduto = transactions.filter(tx => tx.produto === p.nome);
       const principais = txProduto.filter(tx => tx.tipo !== 'upsell' && tx.tipo !== 'incompativel');
       const upsells = txProduto.filter(tx => tx.tipo === 'upsell');
@@ -124,23 +124,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
       return `
         <div class="detalhe-card">
-          <div class="detalhe-header">${p.nome}</div>
-          <div class="detalhe-block">
-            <div class="detalhe-subtitle">Vendas Principais</div>
-            <div class="detalhe-values">${principaisStr || '—'}</div>
-            <div class="detalhe-soma">Soma Principal: <strong>R$ ${somaPrincipal.toFixed(2)}</strong></div>
+          <div class="detalhe-header" onclick="toggleDetalhe(this)">
+            ${p.nome}
+            <span class="detalhe-toggle">&#9660;</span>
           </div>
-          <div class="detalhe-block">
-            <div class="detalhe-subtitle">Upsells</div>
-            <div class="detalhe-values">${upsellsStr || '—'}</div>
-            <div class="detalhe-soma">Soma dos Upsells: <strong>R$ ${somaUpsells.toFixed(2)}</strong></div>
+          <div class="detalhe-body">
+            <div class="detalhe-block">
+              <div class="detalhe-subtitle">Vendas Principais</div>
+              <div class="detalhe-values">${principaisStr || '—'}</div>
+              <div class="detalhe-soma">Soma Principal: <strong>R$ ${somaPrincipal.toFixed(2)}</strong></div>
+            </div>
+            <div class="detalhe-block">
+              <div class="detalhe-subtitle">Upsells</div>
+              <div class="detalhe-values">${upsellsStr || '—'}</div>
+              <div class="detalhe-soma">Soma dos Upsells: <strong>R$ ${somaUpsells.toFixed(2)}</strong></div>
+            </div>
+            ${incompativel.length > 0 ? `
+            <div class="detalhe-block">
+              <div class="detalhe-subtitle">Vendas Não Identificadas</div>
+              <div class="detalhe-values">${incompativelStr}</div>
+              <div class="detalhe-soma">Soma das Não Identificadas: <strong>R$ ${somaIncompativeis.toFixed(2)}</strong></div>
+            </div>` : ''}
           </div>
-          ${incompativel.length > 0 ? `
-          <div class="detalhe-block">
-            <div class="detalhe-subtitle">Vendas Não Identificadas</div>
-            <div class="detalhe-values">${incompativelStr}</div>
-            <div class="detalhe-soma">Soma das Não Identificadas: <strong>R$ ${somaIncompativeis.toFixed(2)}</strong></div>
-          </div>` : ''}
         </div>
       `;
     }).join('');
@@ -150,15 +155,32 @@ document.addEventListener('DOMContentLoaded', () => {
       const soma = desconhecidos.reduce((s, tx) => s + tx.valor, 0);
       html += `
         <div class="detalhe-card" style="opacity:.6;border-color:#303030">
-          <div class="detalhe-header" style="color:#A0A0A0">Sem Produto</div>
-          <div class="detalhe-block">
-            <div class="detalhe-values">${desconhecidos.map(tx => `R$ ${tx.valor.toFixed(2)}`).join(' + ')}</div>
-            <div class="detalhe-soma">Soma: <strong style="color:#A0A0A0">R$ ${soma.toFixed(2)}</strong></div>
+          <div class="detalhe-header" style="color:#A0A0A0" onclick="toggleDetalhe(this)">
+            Sem Produto
+            <span class="detalhe-toggle">&#9660;</span>
+          </div>
+          <div class="detalhe-body">
+            <div class="detalhe-block">
+              <div class="detalhe-values">${desconhecidos.map(tx => `R$ ${tx.valor.toFixed(2)}`).join(' + ')}</div>
+              <div class="detalhe-soma">Soma: <strong style="color:#A0A0A0">R$ ${soma.toFixed(2)}</strong></div>
+            </div>
           </div>
         </div>`;
     }
 
     list.innerHTML = html;
+  }
+
+  function toggleDetalhe(el) {
+    const body = el.nextElementSibling;
+    const toggle = el.querySelector('.detalhe-toggle');
+    if (body.style.display === 'none') {
+      body.style.display = '';
+      toggle.classList.remove('collapsed');
+    } else {
+      body.style.display = 'none';
+      toggle.classList.add('collapsed');
+    }
   }
 
   function showEmptyState() {

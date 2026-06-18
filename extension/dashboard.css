@@ -31,19 +31,20 @@ header {
 }
 
 .logo-icon {
-  width: 32px;
-  height: 32px;
-  background: #C8FF1A;
-  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, #C8FF1A 0%, #a0e010 100%);
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 0 0 24px rgba(200, 255, 26, 0.12);
 }
 
 .logo-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
   fill: #0B0B0B;
 }
 
@@ -52,11 +53,56 @@ header h1 {
   font-weight: 700;
   color: #F4F4F4;
   letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.header-sub {
+  font-size: 12px;
+  color: #606060;
 }
 
 .header-actions {
   display: flex;
   gap: 8px;
+}
+
+.btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.1px;
+}
+
+.btn-icon-sm {
+  width: 14px;
+  height: 14px;
+  stroke: #A0A0A0;
+  flex-shrink: 0;
+  transition: stroke 0.2s;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.03);
+  color: #C0C0C0;
+  border: 1px solid #222;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #333;
+  color: #F4F4F4;
+}
+
+.btn-secondary:hover .btn-icon-sm {
+  stroke: #F4F4F4;
 }
 
 .cards-section {
@@ -67,45 +113,97 @@ header h1 {
 }
 
 .card {
-  background: #161616;
-  border: 1px solid #242424;
+  background: #111;
+  border: 1px solid #1A1A1A;
   border-radius: 12px;
-  padding: 20px;
+  padding: 18px 14px;
   text-align: center;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
 }
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover {
+  border-color: #242424;
+  background: #141414;
+  transform: translateY(-2px);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card:nth-child(1)::before { background: #C8FF1A; }
+.card:nth-child(2)::before { background: #5E9CFF; }
+.card:nth-child(3)::before { background: #FFD95E; }
+.card:nth-child(4)::before { background: #FF6B9D; }
+.card:nth-child(5)::before { background: #A78BFA; }
+.card:nth-child(6)::before { background: #505050; }
+
+.card-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 auto 10px;
+}
+
+.card-icon-receita { background: rgba(200, 255, 26, 0.12); color: #C8FF1A; }
+.card-icon-vendas { background: rgba(94, 156, 255, 0.12); color: #5E9CFF; }
+.card-icon-ticket { background: rgba(255, 217, 94, 0.12); color: #FFD95E; }
+.card-icon-upsells { background: rgba(255, 107, 157, 0.12); color: #FF6B9D; }
+.card-icon-nao-id { background: rgba(167, 139, 250, 0.12); color: #A78BFA; }
+.card-icon-sem-produto { background: rgba(80, 80, 80, 0.2); color: #707070; }
 
 .card-value {
   font-size: 22px;
   font-weight: 700;
-  color: #C8FF1A;
+  color: #F4F4F4;
   margin-bottom: 4px;
+  letter-spacing: -0.3px;
 }
 
+.card:nth-child(1) .card-value { color: #C8FF1A; }
+
 .card-label {
-  font-size: 12px;
-  color: #A0A0A0;
+  font-size: 11px;
+  color: #606060;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
 }
 
 .section {
-  background: #161616;
-  border: 1px solid #242424;
+  background: #111;
+  border: 1px solid #1A1A1A;
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
 }
 
 .section h2 {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #A0A0A0;
+  color: #808080;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
 }
 
-/* Product cards */
 #produtos-list {
   display: flex;
   flex-direction: column;
@@ -114,26 +212,39 @@ header h1 {
 
 .product-card {
   background: #0B0B0B;
-  border: 1px solid #242424;
+  border: 1px solid #1A1A1A;
   border-radius: 10px;
   padding: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.product-card:hover {
+  border-color: #242424;
 }
 
 .product-name {
   font-size: 15px;
   font-weight: 700;
   color: #C8FF1A;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .product-metrics {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+  gap: 8px;
 }
 
 .metric {
   text-align: center;
+  padding: 8px 4px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: background 0.2s;
+}
+
+.metric:hover {
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .metric-value {
@@ -141,17 +252,16 @@ header h1 {
   font-size: 16px;
   font-weight: 600;
   color: #F4F4F4;
+  margin-bottom: 2px;
 }
 
 .metric-label {
   font-size: 11px;
-  color: #A0A0A0;
+  color: #606060;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  margin-top: 2px;
 }
 
-/* Ranking table */
 .table-wrapper {
   overflow-x: auto;
 }
@@ -165,18 +275,23 @@ table {
 thead th {
   text-align: left;
   padding: 10px 12px;
-  color: #A0A0A0;
+  color: #606060;
   font-weight: 600;
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
-  border-bottom: 1px solid #242424;
+  letter-spacing: 0.4px;
+  border-bottom: 1px solid #1A1A1A;
 }
 
 tbody td {
   padding: 10px 12px;
-  border-bottom: 1px solid #1A1A1A;
-  color: #F4F4F4;
+  border-bottom: 1px solid #141414;
+  color: #E0E0E0;
+  transition: background 0.15s;
+}
+
+tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 tbody tr:last-child td {
@@ -185,6 +300,7 @@ tbody tr:last-child td {
 
 .td-produto {
   font-weight: 600;
+  color: #F4F4F4;
 }
 
 .td-valor {
@@ -192,31 +308,57 @@ tbody tr:last-child td {
   font-weight: 600;
 }
 
-/* Detalhamento */
 #detalhamento-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .detalhe-card {
   background: #0B0B0B;
-  border: 1px solid #242424;
+  border: 1px solid #1A1A1A;
   border-radius: 10px;
-  padding: 16px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.detalhe-card:hover {
+  border-color: #242424;
 }
 
 .detalhe-header {
   font-size: 14px;
   font-weight: 700;
   color: #C8FF1A;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #242424;
+  padding: 14px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.detalhe-header:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.detalhe-toggle {
+  font-size: 10px;
+  color: #505050;
+  transition: transform 0.2s ease;
+}
+
+.detalhe-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+.detalhe-body {
+  padding: 0 16px 16px;
 }
 
 .detalhe-block {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .detalhe-block:last-child {
@@ -225,64 +367,45 @@ tbody tr:last-child td {
 
 .detalhe-subtitle {
   font-size: 11px;
-  color: #A0A0A0;
+  font-weight: 600;
+  color: #707070;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
   margin-bottom: 6px;
 }
 
 .detalhe-values {
   font-size: 12px;
-  color: #F4F4F4;
+  color: #C0C0C0;
   line-height: 1.6;
   word-break: break-all;
   margin-bottom: 6px;
+  font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+  letter-spacing: -0.1px;
 }
 
 .detalhe-soma {
   font-size: 13px;
   color: #C8FF1A;
-}
-
-.detalhe-soma strong {
-  font-weight: 700;
-}
-
-.btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  font-size: 12px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: inherit;
-}
-
-.btn-secondary {
-  background: transparent;
-  color: #F4F4F4;
-  border: 1px solid #303030;
-}
-
-.btn-secondary:hover {
-  background: #1A1A1A;
 }
 
 .empty-state {
   text-align: center;
-  color: #505050;
+  color: #404040;
   padding: 40px 20px;
   font-size: 14px;
 }
 
 footer {
   text-align: center;
-  margin-top: 16px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #181818;
 }
 
 footer a {
-  color: #A0A0A0;
+  color: #505050;
   text-decoration: none;
   font-size: 13px;
   transition: color 0.2s;

@@ -197,8 +197,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showStatus(msg, type) {
-    statusMessage.textContent = msg;
-    statusMessage.className = `status ${type}`;
+    if (!type) {
+      statusMessage.className = 'status-card';
+      document.getElementById('status-title').textContent = 'Pronto para analisar';
+      document.getElementById('status-desc').textContent = 'Clique em Analisar Vendas para começar';
+      return;
+    }
+    statusMessage.className = `status-card status-${type}`;
+    document.getElementById('status-title').textContent = msg || '...';
+    document.getElementById('status-desc').textContent = ({
+      info: 'Processando transações...',
+      success: '',
+      error: 'Verifique e tente novamente'
+    })[type] || '';
   }
 
   function openPage(page) {
