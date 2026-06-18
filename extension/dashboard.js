@@ -127,9 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           ${incompativel.length > 0 ? `
           <div class="detalhe-block">
-            <div class="detalhe-subtitle" style="color:#ff3b30">Não Identificadas</div>
+            <div class="detalhe-subtitle">Vendas não identificadas</div>
             <div class="detalhe-values">${incompativelStr}</div>
-            <div class="detalhe-soma" style="color:#ff3b30">Soma: <strong>R$ ${somaIncompativeis.toFixed(2)}</strong></div>
+            <div class="detalhe-soma">Soma: <strong>R$ ${somaIncompativeis.toFixed(2)}</strong></div>
           </div>` : ''}
         </div>
       `;
