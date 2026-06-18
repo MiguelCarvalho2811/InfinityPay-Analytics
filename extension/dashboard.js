@@ -25,12 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const produtos = latest.produtos || [];
     const classified = latest.transactions || [];
 
-    const totalReceita = produtos.reduce((s, p) => s + p.receita, 0);
-    const totalVendas = produtos.reduce((s, p) => s + p.vendas, 0);
-    const totalUpsells = produtos.reduce((s, p) => s + p.upsells, 0);
-    const ticketMedio = totalVendas > 0 ? totalReceita / totalVendas : 0;
-
-    updateCards({ totalReceita, totalVendas, totalUpsells, ticketMedio });
+    updateCards(latest);
     updateProdutos(produtos);
     updateRanking(produtos);
     updateDetalhamento(produtos, classified);
