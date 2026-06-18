@@ -73,7 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
         func: analyzeTransactions
       });
 
-      const transactions = results?.[0]?.result || [];
+      const result = results?.[0]?.result || [];
+      const transactions = result.transactions || result;
+      const h3Found = result.h3Found || transactions.length;
 
       if (transactions.length === 0) {
         showStatus('Nenhuma transação encontrada. Verifique se há vendas no extrato.', 'error');
@@ -88,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       displaySummary(summary, classified);
       const naoId = classified.filter(tx => tx.tipo === 'desconhecido');
       showStatus(
-        `Análise concluída: ${summary.totalVendas} venda(s), ${naoId.length} não identificada(s).`,
+        `Análise concluída: ${summary.totalVendas} venda(s), ${naoId.length} não identificada(s). H3 na página: ${h3Found}`,
         'success'
       );
     } catch (err) {

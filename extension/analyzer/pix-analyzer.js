@@ -15,18 +15,30 @@ async function analyzeTransactions(maxCount) {
     }
   }
 
-  // Scroll to bottom to trigger lazy loading of all transactions
-  const scrollTarget = document.querySelector('[class*="statement"]') || document.querySelector('main, [class*="content"], [class*="list"]') || document.body;
-  for (let s = 0; s < 10; s++) {
-    scrollTarget.scrollTop = scrollTarget.scrollHeight;
-    await sleep(500);
-    const prev = scrollTarget.scrollTop;
-    scrollTarget.scrollTop = scrollTarget.scrollHeight;
-    await sleep(300);
-    if (scrollTarget.scrollTop === prev) break;
+  // Scroll all possible containers to trigger lazy loading
+  const scrollCandidates = [...document.querySelectorAll('[class*="statement"], [class*="list"], [class*="content"], [class*="table"], [class*="items"], main, section')].filter(el => el.scrollHeight > el.clientHeight);
+  if (scrollCandidates.length === 0) scrollCandidates.push(document.body);
+  for (const target of scrollCandidates) {
+    for (let s = 0; s < 15; s++) {
+      target.scrollTop = target.scrollHeight;
+      await sleep(400);
+      const prev = target.scrollTop;
+      target.scrollTop = target.scrollHeight;
+      await sleep(200);
+      if (target.scrollTop === prev) break;
+    }
   }
 
-  const h3Els = [...document.querySelectorAll("h3")].filter(el =>
+  let h3Els = [...document.querySelectorAll("h3")].filter(el =>
+    el.innerText.toLowerCase().includes("pix")
+  );
+
+  // Second scroll pass to catch any remaining lazy-loaded items
+  for (const target of scrollCandidates) {
+    target.scrollTop = target.scrollHeight;
+    await sleep(500);
+  }
+  h3Els = [...document.querySelectorAll("h3")].filter(el =>
     el.innerText.toLowerCase().includes("pix")
   );
 
@@ -90,5 +102,5 @@ async function analyzeTransactions(maxCount) {
     await closeDialog();
   }
 
-  return results;
+  return { transactions: results, h3Found: h3Els.length };
 }
