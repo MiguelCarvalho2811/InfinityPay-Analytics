@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       displaySummary(summary, classified);
       const naoId = classified.filter(tx => tx.tipo === 'desconhecido');
       showStatus(
-        `Análise concluída: ${summary.totalVendas} venda(s), ${naoId.length} não identificada(s). H3 na página: ${h3Found}`,
+        `Análise concluída: ${summary.totalVendas} venda(s), ${naoId.length} não identificada(s).`,
         'success'
       );
     } catch (err) {
