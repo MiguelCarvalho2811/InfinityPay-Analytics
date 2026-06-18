@@ -143,6 +143,26 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     }).join('');
 
+    const desconhecidos = transactions.filter(tx => tx.tipo === 'desconhecido');
+    if (desconhecidos.length > 0) {
+      const grupos = {};
+      for (const tx of desconhecidos) {
+        const chave = tx.pixEnding || 'Sem chave';
+        if (!grupos[chave]) grupos[chave] = { valores: [], soma: 0 };
+        grupos[chave].valores.push(tx);
+        grupos[chave].soma += tx.valor;
+      }
+      html += Object.entries(grupos).map(([chave, g]) => `
+        <div class="detalhe-card">
+          <div class="detalhe-header" style="color:#ff3b30">Chave: ${chave}</div>
+          <div class="detalhe-block">
+            <div class="detalhe-values">${g.valores.map(tx => `R$ ${tx.valor.toFixed(2)}`).join(' + ')}</div>
+            <div class="detalhe-soma">Soma: <strong style="color:#ff3b30">R$ ${g.soma.toFixed(2)}</strong></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
     list.innerHTML = html;
   }
 
