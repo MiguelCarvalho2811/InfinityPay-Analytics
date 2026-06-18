@@ -61,7 +61,7 @@ header h1 {
 
 .cards-section {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 12px;
   margin-bottom: 24px;
 }
@@ -246,6 +246,32 @@ tbody tr:last-child td {
 
 .detalhe-soma strong {
   font-weight: 700;
+}
+
+.product-card-dim {
+  opacity: 0.6;
+  border-color: #303030;
+}
+
+.product-name-dim {
+  color: #A0A0A0 !important;
+}
+
+.tr-dim td {
+  opacity: 0.6;
+}
+
+.td-produto-dim {
+  color: #A0A0A0 !important;
+}
+
+.detalhe-card-dim {
+  opacity: 0.6;
+  border-color: #303030;
+}
+
+.detalhe-header-dim {
+  color: #A0A0A0 !important;
 }
 
 .btn {
