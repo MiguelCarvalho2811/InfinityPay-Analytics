@@ -186,9 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
       summary.produtos.forEach(p => {
         const chips = [`${p.vendas} vendas`, `R$ ${p.receita.toFixed(2)}`];
         if (p.upsells) chips.push(`${p.upsells} upsells`);
-        html += `<div style="display:flex;justify-content:space-between;padding:6px 8px;background:#0B0B0B;border-radius:6px;margin-bottom:4px;font-size:12px">
-          <span style="color:#F4F4F4">${p.nome}</span>
-          <span style="color:#C8FF1A;font-weight:600">${chips.join(' · ')}</span>
+        html += `<div class="produto-row">
+          <span class="produto-row-name">${p.nome}</span>
+          <span class="produto-row-stats">${chips.join(' · ')}</span>
         </div>`;
       });
       html += '</div>';

@@ -308,3 +308,31 @@ footer {
 .hidden {
   display: none !important;
 }
+
+.produto-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background: #0B0B0B;
+  border: 1px solid #1A1A1A;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  transition: border-color 0.2s;
+}
+
+.produto-row:hover {
+  border-color: #242424;
+}
+
+.produto-row-name {
+  font-size: 12px;
+  color: #F4F4F4;
+  font-weight: 500;
+}
+
+.produto-row-stats {
+  font-size: 12px;
+  color: #C8FF1A;
+  font-weight: 600;
+}
