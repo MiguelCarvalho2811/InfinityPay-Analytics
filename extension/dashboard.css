@@ -414,3 +414,117 @@ footer a {
 footer a:hover {
   color: #C8FF1A;
 }
+
+/* Horários */
+.horario-geral {
+  margin-bottom: 24px;
+}
+
+.horario-geral-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #F4F4F4;
+  margin-bottom: 4px;
+}
+
+.horario-geral-sub {
+  font-size: 12px;
+  color: #606060;
+  margin-bottom: 16px;
+}
+
+.horario-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 140px;
+  padding: 12px 0;
+  border-bottom: 1px solid #1A1A1A;
+  margin-bottom: 12px;
+}
+
+.horario-bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.horario-bar {
+  width: 100%;
+  max-width: 20px;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  background: #C8FF1A;
+  transition: opacity 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.horario-bar:hover {
+  opacity: 0.8;
+  transform: scaleY(1.05);
+}
+
+.horario-bar-count {
+  font-size: 8px;
+  color: #505050;
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+
+.horario-bar-label {
+  font-size: 8px;
+  color: #404040;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.horario-produto {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #181818;
+}
+
+.horario-produto-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #C8FF1A;
+  margin-bottom: 12px;
+}
+
+.horario-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.horario-card {
+  background: #0B0B0B;
+  border: 1px solid #1A1A1A;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.horario-card-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #F4F4F4;
+  margin-bottom: 2px;
+}
+
+.horario-card-label {
+  font-size: 10px;
+  color: #606060;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.horario-card-hint {
+  font-size: 10px;
+  color: #505050;
+  margin-top: 1px;
+}

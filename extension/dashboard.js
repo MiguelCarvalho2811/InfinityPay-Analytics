@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCards(latest, totalNaoId, totalSemProduto);
     updateProdutos(produtos);
     updateRanking(produtos);
+    updateHorarios(classified);
     updateDetalhamento(produtos, classified);
   }
 
@@ -98,6 +99,105 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>R$ ${p.ticketMedio.toFixed(2)}</td>
       </tr>
     `).join('');
+  }
+
+  function updateHorarios(transactions) {
+    const container = document.getElementById('horarios-container');
+    const comHorario = transactions.filter(tx => tx.horario);
+
+    if (comHorario.length === 0) {
+      container.innerHTML = '<p class="empty-state">Nenhum dado de horário disponível.</p>';
+      return;
+    }
+
+    function buildHourly(txs) {
+      const h = Array(24).fill(0);
+      txs.forEach(tx => {
+        const hr = parseInt(tx.horario.split(':')[0], 10);
+        if (hr >= 0 && hr < 24) h[hr]++;
+      });
+      return h;
+    }
+
+    function hourLabel(h) { return `${String(h).padStart(2, '0')}h`; }
+
+    function maxIdx(arr) { return arr.indexOf(Math.max(...arr)); }
+    function minIdx(arr) {
+      const mn = Math.min(...arr);
+      const candidates = arr.map((v, i) => v === mn ? i : -1).filter(i => i >= 0);
+      return candidates[Math.floor(candidates.length / 2)];
+    }
+
+    function stats(txs, hourly) {
+      const sorted = [...txs].sort((a, b) => (a.dataHora || a.horario).localeCompare(b.dataHora || b.horario));
+      const first = sorted[0];
+      const last = sorted[sorted.length - 1];
+      const bestH = maxIdx(hourly);
+      const worstH = minIdx(hourly);
+      return { first, last, bestH, worstH, bestCount: hourly[bestH], worstCount: hourly[worstH] };
+    }
+
+    function renderChart(hourly, st, label) {
+      const maxVal = Math.max(...hourly, 1);
+      const bars = hourly.map((v, h) => {
+        const pct = (v / maxVal) * 100;
+        return `<div class="horario-bar-wrap" title="${hourLabel(h)}: ${v} venda(s)">
+          <div class="horario-bar-count">${v || ''}</div>
+          <div class="horario-bar" style="height:${Math.max(pct, 2)}%"></div>
+          <div class="horario-bar-label">${hourLabel(h)}</div>
+        </div>`;
+      }).join('');
+
+      return `
+        <div class="horario-chart">${bars}</div>
+        <div class="horario-cards">
+          <div class="horario-card">
+            <div class="horario-card-value">${hourLabel(st.bestH)}</div>
+            <div class="horario-card-label">Melhor horário</div>
+            <div class="horario-card-hint">${st.bestCount} venda(s)</div>
+          </div>
+          <div class="horario-card">
+            <div class="horario-card-value">${hourLabel(st.worstH)}</div>
+            <div class="horario-card-label">Horário mais fraco</div>
+            <div class="horario-card-hint">${st.worstCount} venda(s)</div>
+          </div>
+          <div class="horario-card">
+            <div class="horario-card-value">${st.first.horario || '--'}</div>
+            <div class="horario-card-label">Primeira venda</div>
+          </div>
+          <div class="horario-card">
+            <div class="horario-card-value">${st.last.horario || '--'}</div>
+            <div class="horario-card-label">Última venda</div>
+          </div>
+        </div>`;
+    }
+
+    const geralHourly = buildHourly(comHorario);
+    const geralStats = stats(comHorario, geralHourly);
+
+    let html = `<div class="horario-geral">
+      <div class="horario-geral-title">Distribuição de Vendas do Dia</div>
+      <div class="horario-geral-sub">Todas as vendas encontradas na análise</div>
+      ${renderChart(geralHourly, geralStats, 'Geral')}
+    </div>`;
+
+    const produtosAgrupados = {};
+    comHorario.forEach(tx => {
+      const nome = tx.produto || 'Sem Produto';
+      if (!produtosAgrupados[nome]) produtosAgrupados[nome] = [];
+      produtosAgrupados[nome].push(tx);
+    });
+
+    Object.entries(produtosAgrupados).sort((a, b) => b[1].length - a[1].length).forEach(([nome, txs]) => {
+      const hourly = buildHourly(txs);
+      const st = stats(txs, hourly);
+      html += `<div class="horario-produto">
+        <div class="horario-produto-title">Horários — ${nome}</div>
+        ${renderChart(hourly, st, nome)}
+      </div>`;
+    });
+
+    container.innerHTML = html;
   }
 
   function updateDetalhamento(produtos, transactions) {
@@ -194,10 +294,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const { analyses } = await chrome.storage.local.get('analyses');
     if (!analyses || analyses.length === 0) return alert('Nenhum dado para exportar.');
 
-    const rows = [['data', 'produto', 'valor', 'tipo', 'pix']];
+    const rows = [['data', 'produto', 'valor', 'categoria', 'pix', 'horario', 'dataHora']];
     analyses.forEach(a => {
       (a.transactions || []).forEach(tx => {
-        rows.push([tx.data, tx.produto || '', tx.valor, tx.tipo || '', tx.pixEnding || '']);
+        rows.push([tx.data, tx.produto || '', tx.valor, tx.categoria || '', tx.pixEnding || '', tx.horario || '', tx.dataHora || '']);
       });
     });
 

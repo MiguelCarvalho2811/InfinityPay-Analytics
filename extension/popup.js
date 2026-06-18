@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const product = tx.pixEnding ? pixProductMap[tx.pixEnding] : null;
 
       if (!product) {
-        return { ...tx, produto: 'Não identificado', tipo: 'desconhecido' };
+        return { ...tx, produto: 'Não identificado', tipo: 'desconhecido', categoria: 'Desconhecido' };
       }
 
       const candidates = [
@@ -128,7 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (diff < bestDiff) { bestDiff = diff; best = candidates[i]; }
       }
 
-      return { ...tx, produto: product.nome, tipo: bestDiff <= 0.50 ? best.type : 'incompativel' };
+      const finalTipo = bestDiff <= 0.50 ? best.type : 'incompativel';
+      const catMap = { upsell: 'Upsell', incompativel: 'Incompativel' };
+      return { ...tx, produto: product.nome, tipo: finalTipo, categoria: catMap[finalTipo] || 'Principal' };
     });
   }
 

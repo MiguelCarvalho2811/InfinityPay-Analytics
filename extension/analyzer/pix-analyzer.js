@@ -95,7 +95,15 @@ async function analyzeTransactions(maxCount) {
         await closeDialog();
       }
 
-      if (valor > 0) results.push({ valor, pixEnding });
+      if (valor > 0) {
+        const h3Text = el.innerText;
+        const timeM = h3Text.match(/(\d{1,2}:\d{2})\b/);
+        const dateM = h3Text.match(/(\d{1,2}\s+\w+,\s*\d{4})/);
+        const horario = timeM ? timeM[1] : '';
+        const dataStr = dateM ? dateM[1] : '';
+        const dataHora = dataStr ? `${dataStr} ${horario}` : horario;
+        results.push({ valor, pixEnding, horario, dataHora });
+      }
     } catch (e) {}
   }
 
