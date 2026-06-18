@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (diff < bestDiff) { bestDiff = diff; best = candidates[i]; }
       }
 
-      return { ...tx, produto: product.nome, tipo: best.type };
+      return { ...tx, produto: product.nome, tipo: bestDiff <= 0.50 ? best.type : 'incompativel' };
     });
   }
 

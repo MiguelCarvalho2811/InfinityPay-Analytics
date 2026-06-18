@@ -98,18 +98,19 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const naoIdentificadas = transactions.filter(tx => tx.tipo === 'desconhecido');
-
     let html = produtos.map(p => {
       const txProduto = transactions.filter(tx => tx.produto === p.nome);
-      const principais = txProduto.filter(tx => tx.tipo !== 'upsell' && tx.tipo !== 'desconhecido');
+      const principais = txProduto.filter(tx => tx.tipo !== 'upsell' && tx.tipo !== 'incompativel');
       const upsells = txProduto.filter(tx => tx.tipo === 'upsell');
+      const incompativel = txProduto.filter(tx => tx.tipo === 'incompativel');
 
       const principaisStr = principais.map(tx => `R$ ${tx.valor.toFixed(2)}`).join(' + ');
       const upsellsStr = upsells.map(tx => `R$ ${tx.valor.toFixed(2)}`).join(' + ');
+      const incompativelStr = incompativel.map(tx => `R$ ${tx.valor.toFixed(2)}`).join(' + ');
 
       const somaPrincipal = principais.reduce((acc, tx) => acc + tx.valor, 0);
       const somaUpsells = upsells.reduce((acc, tx) => acc + tx.valor, 0);
+      const somaIncompativeis = incompativel.reduce((acc, tx) => acc + tx.valor, 0);
 
       return `
         <div class="detalhe-card">
@@ -124,23 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="detalhe-values">${upsellsStr || '—'}</div>
             <div class="detalhe-soma">Soma dos Upsells: <strong>R$ ${somaUpsells.toFixed(2)}</strong></div>
           </div>
+          ${incompativel.length > 0 ? `
+          <div class="detalhe-block">
+            <div class="detalhe-subtitle" style="color:#ff3b30">Não Identificadas</div>
+            <div class="detalhe-values">${incompativelStr}</div>
+            <div class="detalhe-soma" style="color:#ff3b30">Soma: <strong>R$ ${somaIncompativeis.toFixed(2)}</strong></div>
+          </div>` : ''}
         </div>
       `;
     }).join('');
-
-    if (naoIdentificadas.length > 0) {
-      const valores = naoIdentificadas.map(tx => `R$ ${tx.valor.toFixed(2)}`);
-      const soma = naoIdentificadas.reduce((s, tx) => s + tx.valor, 0);
-      html += `
-        <div class="detalhe-card">
-          <div class="detalhe-header" style="color:#ff3b30">Não Identificadas</div>
-          <div class="detalhe-block">
-            <div class="detalhe-values">${valores.join(' + ')}</div>
-            <div class="detalhe-soma">Soma: <strong>R$ ${soma.toFixed(2)}</strong></div>
-          </div>
-        </div>
-      `;
-    }
 
     list.innerHTML = html;
   }
