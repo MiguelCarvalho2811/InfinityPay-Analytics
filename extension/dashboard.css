@@ -42,18 +42,18 @@ header {
   box-shadow: 0 0 24px rgba(200, 255, 26, 0.12);
 }
 
-.logo-icon svg {
-  width: 19px;
-  height: 19px;
-  fill: #0B0B0B;
-}
-
 header h1 {
   font-size: 20px;
   font-weight: 700;
   color: #F4F4F4;
   letter-spacing: -0.3px;
   line-height: 1.2;
+}
+
+.logo-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 .header-sub {
