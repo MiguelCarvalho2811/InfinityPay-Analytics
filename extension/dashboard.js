@@ -98,7 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    list.innerHTML = produtos.map(p => {
+    const naoIdentificadas = transactions.filter(tx => tx.tipo === 'desconhecido');
+
+    let html = produtos.map(p => {
       const txProduto = transactions.filter(tx => tx.produto === p.nome);
       const principais = txProduto.filter(tx => tx.tipo !== 'upsell' && tx.tipo !== 'desconhecido');
       const upsells = txProduto.filter(tx => tx.tipo === 'upsell');
@@ -125,6 +127,22 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
     }).join('');
+
+    if (naoIdentificadas.length > 0) {
+      const valores = naoIdentificadas.map(tx => `R$ ${tx.valor.toFixed(2)}`);
+      const soma = naoIdentificadas.reduce((s, tx) => s + tx.valor, 0);
+      html += `
+        <div class="detalhe-card">
+          <div class="detalhe-header" style="color:#ff3b30">Não Identificadas</div>
+          <div class="detalhe-block">
+            <div class="detalhe-values">${valores.join(' + ')}</div>
+            <div class="detalhe-soma">Soma: <strong>R$ ${soma.toFixed(2)}</strong></div>
+          </div>
+        </div>
+      `;
+    }
+
+    list.innerHTML = html;
   }
 
   function showEmptyState() {
