@@ -26,19 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const classified = latest.transactions || [];
 
     const totalNaoId = latest.totalNaoId ?? classified.filter(tx => tx.tipo === 'incompativel').length;
+    const totalSemProduto = latest.totalDesconhecido ?? classified.filter(tx => tx.tipo === 'desconhecido').length;
 
-    updateCards(latest, totalNaoId);
+    updateCards(latest, totalNaoId, totalSemProduto);
     updateProdutos(produtos);
     updateRanking(produtos);
     updateDetalhamento(produtos, classified);
   }
 
-  function updateCards(summary, totalNaoId) {
+  function updateCards(summary, totalNaoId, totalSemProduto) {
     document.getElementById('card-receita').textContent = `R$ ${summary.totalReceita.toFixed(2)}`;
     document.getElementById('card-vendas').textContent = summary.totalVendas;
     document.getElementById('card-ticket').textContent = `R$ ${summary.ticketMedio.toFixed(2)}`;
     document.getElementById('card-upsells').textContent = summary.totalUpsells;
     document.getElementById('card-nao-id').textContent = totalNaoId;
+    document.getElementById('card-sem-produto').textContent = totalSemProduto;
   }
 
   function updateProdutos(produtos) {
@@ -142,6 +144,19 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
     }).join('');
+
+    const desconhecidos = transactions.filter(tx => tx.tipo === 'desconhecido');
+    if (desconhecidos.length > 0) {
+      const soma = desconhecidos.reduce((s, tx) => s + tx.valor, 0);
+      html += `
+        <div class="detalhe-card" style="opacity:.6;border-color:#303030">
+          <div class="detalhe-header" style="color:#A0A0A0">Sem Produto</div>
+          <div class="detalhe-block">
+            <div class="detalhe-values">${desconhecidos.map(tx => `R$ ${tx.valor.toFixed(2)}`).join(' + ')}</div>
+            <div class="detalhe-soma">Soma: <strong style="color:#A0A0A0">R$ ${soma.toFixed(2)}</strong></div>
+          </div>
+        </div>`;
+    }
 
     list.innerHTML = html;
   }

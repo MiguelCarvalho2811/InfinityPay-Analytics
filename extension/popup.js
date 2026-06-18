@@ -180,14 +180,12 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="summary-card"><div class="value">${summary.totalVendas}</div><div class="label">Vendas</div></div>
       <div class="summary-card"><div class="value">R$ ${summary.ticketMedio.toFixed(2)}</div><div class="label">Ticket Médio</div></div>
       <div class="summary-card"><div class="value">${summary.totalUpsells}</div><div class="label">Upsells</div></div>
-      <div class="summary-card"><div class="value">${summary.totalNaoId}</div><div class="label">Não Identificadas</div></div>
     `;
     if (summary.produtos?.length) {
       html += '<div style="grid-column:1/-1;margin-top:8px"><div style="font-size:11px;color:#A0A0A0;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px">Por Produto</div>';
       summary.produtos.forEach(p => {
         const chips = [`${p.vendas} vendas`, `R$ ${p.receita.toFixed(2)}`];
         if (p.upsells) chips.push(`${p.upsells} upsells`);
-        if (p.naoId) chips.push(`${p.naoId} não id.`);
         html += `<div style="display:flex;justify-content:space-between;padding:6px 8px;background:#0B0B0B;border-radius:6px;margin-bottom:4px;font-size:12px">
           <span style="color:#F4F4F4">${p.nome}</span>
           <span style="color:#C8FF1A;font-weight:600">${chips.join(' · ')}</span>
